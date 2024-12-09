@@ -2,9 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.get),
-    path('all_videos/', views.all_videos),
-    path('add_video/', views.add_video),
-    path('del_video/', views.del_video),
+    path('', views.get_video),
+    path('all', views.all_videos),
+    path('read', views.get_video),
+    path('create', views.add_video),
+    path('delete', views.del_video),
+    path('update', views.edit_video),
 ]
 
