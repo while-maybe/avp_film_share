@@ -14,8 +14,8 @@ class FilmVideo(admin.ModelAdmin):
     
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = ['username', 'email', 'num_uploads', 'date_joined']
+    list_display = ['username', 'email', 'num_uploads', 'last_login']
     list_filter = ['username', 'date_joined']
     search_fields = ['username', 'email', 'num_uploads', 'date_joined']
-    ordering = ['date_joined']
+    ordering = ['last_login']
     show_facets = admin.ShowFacets.ALWAYS
