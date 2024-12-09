@@ -22,6 +22,7 @@ class Video(models.Model):
     def __str__(self):
         return self.title
 
+
 class Author(AbstractUser):
     class Status(models.TextChoices):
         ACTIVE = 'AC', 'Active'
