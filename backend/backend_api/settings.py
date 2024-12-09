@@ -143,3 +143,7 @@ STATIC_ROOT = BASE_DIR / 'static'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# We're overriding the default AUTH_USER_MODEL to include our extra details
+# this is a good idea so Django can still manage password safety complexities
+AUTH_USER_MODEL = 'data_api_app.Author'
