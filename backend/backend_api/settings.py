@@ -17,8 +17,13 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
 SECRET_KEY = os.getenv('SECRET_KEY')
+
+DJANGO_SUPERUSER_USERNAME = os.getenv('DJANGO_SUPERUSER_USERNAME')
+DJANGO_SUPERUSER_EMAIL = os.getenv('DJANGO_SUPERUSER_EMAIL')
+DJANGO_SUPERUSER_PASSWORD = os.getenv('DJANGO_SUPERUSER_PASSWORD')
+# user can be created with python manage.py createsuperuser --noinput
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
