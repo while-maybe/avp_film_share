@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class Video(models.Model):
     title = models.CharField(max_length=150)
+    location = models.URLField(default="")
     author = models.ForeignKey(
         'Author',
         on_delete=models.CASCADE,
