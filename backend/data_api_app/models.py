@@ -12,7 +12,7 @@ class Video(models.Model):
     comment = models.TextField(max_length=1000, blank=True)
     slug = models.SlugField(max_length=150)
     date_uploaded = models.DateTimeField(auto_now_add=True)
-    likes = models.IntegerField
+    likes = models.IntegerField(default=0)
     
     class Meta:
         ordering = ['-date_uploaded']
@@ -31,12 +31,8 @@ class Author(AbstractUser):
         choices=Status,
         default=Status.ACTIVE
     )
-    # username = models.CharField(max_length=35)
-    # password = models.CharField(max_length=25)
-    # email = models.CharField(max_length=100)
-    # date_joined = models.DateTimeField(auto_now_add=True)
     about = models.TextField(max_length=1000, blank=True)
-    num_uploads = models.IntegerField
+    num_uploads = models.IntegerField(default=0)
     
     def __str__(self):
         return self.username
