@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class Video(models.Model):
+    video_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=150)
     location = models.URLField(default="")
     author = models.ForeignKey(
@@ -32,6 +33,7 @@ class Author(AbstractUser):
         choices=Status,
         default=Status.ACTIVE
     )
+    author_id = models.AutoField(primary_key=True)
     about = models.TextField(max_length=1000, blank=True)
     num_uploads = models.IntegerField(default=0)
     
