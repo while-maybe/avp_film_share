@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response 
-from rest_framework.status import * # Good for HTTP descriptive consts
+from rest_framework import status # Good for HTTP descriptive consts
 
 from .models import Video
 from .serializers import VideoSerializer
@@ -12,10 +12,10 @@ def all_videos(request):
     try:
         all_videos = Video.objects.all()
         serializer = VideoSerializer(all_videos, many=True) # many=True needed otherwise Django would think one item only
-        return Response(serializer.data, status=HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
     except Exception as e:
-        return Response({"error": f"Can't get videos"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({"error": f"Can't get videos"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET'])
@@ -24,19 +24,19 @@ def get_video(request):
         video_id = request.data.get('video_id')
         
         if not video_id:
-            return Response({"error": "You must provide a video_id"}, status=HTTP_400_BAD_REQUEST)
+            return Response({"error": "You must provide a video_id"}, status=status.HTTP_400_BAD_REQUEST)
         
         # video = get_object_or_404(Video, video_id=video_id)
         video = Video.objects.get(video_id=video_id)
         serializer = VideoSerializer(video)
-        return Response({"success": serializer.data}, status=HTTP_200_OK)
+        return Response({"success": serializer.data}, status=status.HTTP_200_OK)
     
     # TODO Video.DoesNotExist is not getting caught
     except Video.DoesNotExist:
-        return Response({"error": "Video does not exist"}, status=HTTP_404_NOT_FOUND)
+        return Response({"error": "Video does not exist"}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         print(e)
-        return Response({"error": "Can't get video"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({"error": "Can't get video"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
 @api_view(['POST'])
@@ -45,16 +45,16 @@ def add_video(request):
         serializer = VideoSerializer(data=request.data)
         
         if not serializer.is_valid():
-            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         if Video.objects.filter(title__iexact=serializer.validated_data['title']).exists():
-            return Response({"error": "Video already exists"}, status=HTTP_400_BAD_REQUEST)
+            return Response({"error": "Video already exists"}, status=status.HTTP_400_BAD_REQUEST)
             
         serializer.save()
-        return Response({"success": "Video created successfully"}, status=HTTP_201_CREATED)
+        return Response({"success": "Video created successfully"}, status=status.HTTP_201_CREATED)
     
     except Exception as e:
-        return Response({"error": f"Can't add video"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({"error": f"Can't add video"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['PUT'])
