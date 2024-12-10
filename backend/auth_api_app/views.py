@@ -1,10 +1,14 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from rest_framework.response import Response
 from rest_framework.status import *
 
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, logout
+
+# imports for auth
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 # import Author from data_api & AuthorSerializer
 from data_api_app.models import Author
@@ -56,7 +60,13 @@ def login(request):
     return Response(data, status=HTTP_200_OK)
     
 
-@api_view(["GET"])
+@api_view(["POST"])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def logout(request):
     
-    return Response({"message": "logout endpoint"})
+    # _request needed as DRF wraps the request and we need the original request - can't do logout without it
+    logout(request._request)
+    request.user.auth_token.delete()
+    
+    return Response({"message": "logged out"}, status=HTTP_200_OK)
