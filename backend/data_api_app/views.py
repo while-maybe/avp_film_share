@@ -97,11 +97,23 @@ def edit_video(request):
 def del_video(request):
     try:
         video_id = request.data.get('video_id')
+        
         if not video_id:
             return Response({"error": "You must provide a video_id"}, status=HTTP_400_BAD_REQUEST)
-        # video = get_object_or_404(Video, video_id=video_id)
-        video = Video.objects.get(video_id=video_id)
-        video.delete()
+        existing_video = Video.objects.get(video_id=video_id)
+
+        if existing_video.is_deleted:
+            raise Video.DoesNotExist
+
+        serializer = VideoSerializer(existing_video,
+                                     data={"is_deleted": True},
+                                     partial=True)
+        
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        
+        serializer.save()
+
         return Response({"success": "Video was successfully deleted"}, status=HTTP_204_NO_CONTENT)
     except Video.DoesNotExist:
         return Response({"error": "Video does not exist"}, status=HTTP_404_NOT_FOUND)
