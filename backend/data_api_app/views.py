@@ -2,7 +2,11 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response 
 from rest_framework.status import * # Good for HTTP descriptive consts
-
+# imports for auth
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+# my stuff
 from .models import Video
 from .serializers import VideoSerializer
 
@@ -40,6 +44,8 @@ def get_video(request):
     
 
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def add_video(request):
     try:
         serializer = VideoSerializer(data=request.data)
@@ -55,6 +61,8 @@ def add_video(request):
 
 
 @api_view(['PUT', 'PATCH'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def edit_video(request):
     try:
         video_id = request.data.get('video_id')
@@ -84,6 +92,8 @@ def edit_video(request):
 
 
 @api_view(['DELETE'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def del_video(request):
     try:
         video_id = request.data.get('video_id')
