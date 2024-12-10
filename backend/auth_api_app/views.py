@@ -14,6 +14,13 @@ from rest_framework.permissions import IsAuthenticated
 from data_api_app.models import Author
 from .serializers import AuthorSerializer
 
+
+# TODO wrap the functions is similar classes as the data_api view
+# TODO investigate if needed to upgrade to class based views
+# TODO api key auth
+# TODO investigate OTP validation
+
+
 # Create your views here.
 @api_view(["POST"])
 def signup(request):
