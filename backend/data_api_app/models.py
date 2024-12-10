@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class Video(models.Model):
     video_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=150, unique=True)
+    title = models.CharField(max_length=150)
     location = models.URLField(default="", unique=True)
     author = models.ForeignKey(
         'Author',
@@ -14,7 +14,11 @@ class Video(models.Model):
     comment = models.TextField(max_length=1000, blank=True)
     slug = models.SlugField(max_length=150, unique=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
+    date_released = models.DateTimeField(auto_now_add=True)
     likes = models.IntegerField(default=0)
+    
+    is_deleted = models.BooleanField(default=False)
+    
     
     class Meta:
         ordering = ['-date_uploaded']

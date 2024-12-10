@@ -89,6 +89,7 @@ def edit_video(request):
         print(e)
         return Response({"error": "Can't update video"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
+# TODO research instead of deleting entry create a flag like is_deleted
 
 @api_view(['DELETE'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
