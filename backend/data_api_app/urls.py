@@ -2,7 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.get_video),
     path('all/', views.all_videos),
     path('read/', views.get_video),
     path('create/', views.add_video),
