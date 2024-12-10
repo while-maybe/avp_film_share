@@ -54,7 +54,7 @@ def add_video(request):
         return Response({"error": f"Can't add video"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@api_view(['PUT'])
+@api_view(['PUT', 'PATCH'])
 def edit_video(request):
     try:
         video_id = request.data.get('video_id')
@@ -63,8 +63,12 @@ def edit_video(request):
         if not video_id:
             return Response({"error": "You must provide a video_id"}, status=HTTP_400_BAD_REQUEST)
         
-        serializer = VideoSerializer(existing_video, data=request.data, partial=True)
-        
+        # combo?
+        serializer = VideoSerializer(
+            existing_video,
+            data = request.data,
+            partial = (request.method == "PATCH")
+        )
         if not serializer.is_valid():
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         
