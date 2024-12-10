@@ -13,9 +13,19 @@ from .serializers import VideoSerializer
 @api_view(['GET'])
 def all_videos(request):
     try:
-        all_videos = Video.objects.all()
-        serializer = VideoSerializer(all_videos, many=True) # many=True needed otherwise Django would think one item only
-        return Response(serializer.data, status=HTTP_200_OK)
+        # all_videos = Video.objects.all()
+
+        active_videos = [active_v for active_v in Video.objects.all() if not active_v.is_deleted]
+        
+        
+        serializer = VideoSerializer(active_videos, many=True) # many=True needed otherwise Django would think one item only
+        
+        data = {
+            "count": len(active_videos),
+            "result": serializer.data
+        };
+        
+        return Response(data, status=HTTP_200_OK)
     
     except Exception as e:
         return Response({"error": f"Can't get videos"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
