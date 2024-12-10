@@ -53,8 +53,11 @@ INSTALLED_APPS = [
     # rest framework apps
     'rest_framework',
     'rest_framework.authtoken',
+    # third party
+    'drf_spectacular',
     # own apps
     'data_api_app',
+    'auth_api_app',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +150,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # We're overriding the default AUTH_USER_MODEL to include our extra details
 # this is a good idea so Django can still manage password safety complexities
 AUTH_USER_MODEL = 'data_api_app.Author'
+
+# Needed for swagger
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'film share',
+    'DESCRIPTION': 'sbc24 final project',
+    'VERSION': '1.0.0',
+}

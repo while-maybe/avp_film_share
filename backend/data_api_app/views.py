@@ -1,8 +1,11 @@
-from django.shortcuts import get_object_or_404, render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response 
 from rest_framework.status import * # Good for HTTP descriptive consts
+# imports for auth
 
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+# my stuff
 from .models import Video
 from .serializers import VideoSerializer
 
@@ -40,16 +43,15 @@ def get_video(request):
     
 
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def add_video(request):
     try:
         serializer = VideoSerializer(data=request.data)
         
         if not serializer.is_valid():
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-        
-        if Video.objects.filter(title__iexact=serializer.validated_data['title']).exists():
-            return Response({"error": "Video already exists"}, status=HTTP_400_BAD_REQUEST)
-            
+
         serializer.save()
         return Response({"success": "Video created successfully"}, status=HTTP_201_CREATED)
     
@@ -57,7 +59,9 @@ def add_video(request):
         return Response({"error": f"Can't add video"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@api_view(['PUT'])
+@api_view(['PUT', 'PATCH'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def edit_video(request):
     try:
         video_id = request.data.get('video_id')
@@ -66,8 +70,12 @@ def edit_video(request):
         if not video_id:
             return Response({"error": "You must provide a video_id"}, status=HTTP_400_BAD_REQUEST)
         
-        serializer = VideoSerializer(existing_video, data=request.data, partial=True)
-        
+        # combo?
+        serializer = VideoSerializer(
+            existing_video,
+            data = request.data,
+            partial = (request.method == "PATCH")
+        )
         if not serializer.is_valid():
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         
@@ -83,6 +91,8 @@ def edit_video(request):
 
 
 @api_view(['DELETE'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def del_video(request):
     try:
         video_id = request.data.get('video_id')
