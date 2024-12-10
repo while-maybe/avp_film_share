@@ -13,18 +13,15 @@ from .serializers import VideoSerializer
 @api_view(['GET'])
 def all_videos(request):
     try:
-        # all_videos = Video.objects.all()
 
-        active_videos = [active_v for active_v in Video.objects.all() if not active_v.is_deleted]
-        
-        
+        active_videos = Video.objects.filter(is_deleted=False)
+
         serializer = VideoSerializer(active_videos, many=True) # many=True needed otherwise Django would think one item only
         
         data = {
             "count": len(active_videos),
             "result": serializer.data
         };
-        
         return Response(data, status=HTTP_200_OK)
     
     except Exception as e:
