@@ -8,7 +8,8 @@ from django.contrib.auth import authenticate, logout
 
 # imports for auth
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.generics import CreateAPIView
 
 # import Author from data_api & AuthorSerializer
 from data_api_app.models import Author
@@ -22,26 +23,36 @@ from .serializers import AuthorSerializer
 
 
 # Create your views here.
-@api_view(["POST"])
-def signup(request):
-    serializer = AuthorSerializer(data=request.data)
+
+class AuthorSignupCreateView(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = AuthorSerializer
     
-    if serializer.is_valid():
-        serializer.save()
+    def create(self, request):
+        serializer = AuthorSerializer(data=request.data)
         
-        # author as a response
-        author = Author.objects.get(username=request.data['username'])
-        token = Token.objects.get(user=author)
+        if serializer.is_valid():
+            token = serializer.save() # save returns object
+
+            data = {
+                "author": serializer.data,
+                "token": token.key
+            }
+            
+            return Response(data, status=HTTP_201_CREATED)
         
-        serializer = AuthorSerializer(author)
-        data = {
-            "author": serializer.data,
-            "token": token.key
-        }
-        
-        return Response(data, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
+class AuthorLogoutCreateView(CreateAPIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    # serializer_class = AuthorSerializer
+    def create(self, request):
+        logout(request._request)
+        request.user.auth_token.delete()
     
-    return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        return Response({"message": "logged out"}, status=HTTP_200_OK)
 
 
 @api_view(["POST"])
@@ -67,15 +78,17 @@ def login(request):
     return Response(data, status=HTTP_200_OK)
     
 
-@api_view(["POST"])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def logout(request):
+
+
+# @api_view(["POST"])
+# @authentication_classes([SessionAuthentication, TokenAuthentication])
+# @permission_classes([IsAuthenticated])
+# def logout(request):
     
-    # _request needed as DRF wraps the request and we need the original request - can't do logout without it
+#     # _request needed as DRF wraps the request and we need the original request - can't do logout without it
     
-    # TODO research logout from client side
-    logout(request._request)
-    request.user.auth_token.delete()
+#     # TODO research logout from client side
+#     logout(request._request)
+#     request.user.auth_token.delete()
     
-    return Response({"message": "logged out"}, status=HTTP_200_OK)
+#     return Response({"message": "logged out"}, status=HTTP_200_OK)
