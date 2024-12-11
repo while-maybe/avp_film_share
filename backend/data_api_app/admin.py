@@ -5,11 +5,11 @@ from .models import Video, Author
 # Register your models here.
 @admin.register(Video)
 class FilmVideo(admin.ModelAdmin):
-    list_display = ['title', 'author', 'date_uploaded']
-    list_filter = ['author', 'date_uploaded']
-    search_fields = ['title', 'author', 'date_uploaded', 'comment']
-    raw_id_fields = ['author']
-    ordering = ['date_uploaded']
+    list_display = ['video_id', 'title', 'author_id', 'date_uploaded']
+    list_filter = ['author_id', 'date_uploaded']
+    search_fields = ['title', 'author_id', 'date_uploaded', 'comment']
+    # raw_id_fields = ['author_id']
+    ordering = ['-date_uploaded']
     show_facets = admin.ShowFacets.ALWAYS
     
 @admin.register(Author)

@@ -73,6 +73,8 @@ def login(request):
 def logout(request):
     
     # _request needed as DRF wraps the request and we need the original request - can't do logout without it
+    
+    # TODO research logout from client side
     logout(request._request)
     request.user.auth_token.delete()
     
