@@ -9,7 +9,7 @@ class Video(models.Model):
     author_id = models.ForeignKey(
         'Author',
         on_delete=models.CASCADE,
-        related_name='user_videos'
+        related_name='author_videos'
     )
     comment = models.TextField(max_length=1000, blank=True)
     slug = models.SlugField(max_length=150, unique=True)
