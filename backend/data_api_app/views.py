@@ -9,121 +9,103 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Video
 from .serializers import VideoSerializer
 
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView, UpdateAPIView, GenericAPIView
+from drf_spectacular.utils import extend_schema
+
 # Create your views here.
-@api_view(['GET'])
-def all_videos(request):
-    try:
-
-        active_videos = Video.objects.filter(is_deleted=False)
-
-        serializer = VideoSerializer(active_videos, many=True) # many=True needed otherwise Django would think one item only
-        
-        data = {
-            "count": len(active_videos),
-            "result": serializer.data
-        };
-        return Response(data, status=HTTP_200_OK)
+class VideoListView(ListAPIView):
+    queryset = Video.objects.order_by('-date_uploaded').filter(is_deleted=False)
+    serializer_class = VideoSerializer
     
-    except Exception as e:
-        return Response({"error": f"Can't get videos"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+class VideoRetrieveView(RetrieveAPIView):
+    queryset = Video.objects.order_by('-date_uploaded').filter(is_deleted=False)
+    serializer_class = VideoSerializer
 
+class VideoAddView(CreateAPIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = VideoSerializer
 
-@api_view(['GET'])
-def get_video(request):
-    try:
-        video_id = request.data.get('video_id')
+    def post(self, request, *args, **kwargs):
         
-        if not video_id:
-            return Response({"error": "You must provide a video_id"}, status=HTTP_400_BAD_REQUEST)
-        
-        # video = get_object_or_404(Video, video_id=video_id)
-        video = Video.objects.get(video_id=video_id)
-        serializer = VideoSerializer(video)
-        return Response({"success": serializer.data}, status=HTTP_200_OK)
-    
-    # TODO Video.DoesNotExist is not getting caught
-    except Video.DoesNotExist:
-        return Response({"error": "Video does not exist"}, status=HTTP_404_NOT_FOUND)
-    except Exception as e:
-        print(e)
-        return Response({"error": "Can't get video"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
-    
-
-@api_view(['POST'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def add_video(request):
-    try:
         serializer = VideoSerializer(data=request.data)
         
         if not serializer.is_valid():
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-
-        serializer.save()
+        
+        serializer.save(author_id=self.request.user)
         return Response({"success": "Video created successfully"}, status=HTTP_201_CREATED)
+
+
+class VideoUpdateView(UpdateAPIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = VideoSerializer
     
-    except Exception as e:
-        return Response({"error": f"Can't add video"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+    def update(self, request, *args, **kwargs):
+        video_id = kwargs.get('video_id')
+        
+        if video_id is None:
+            return Response({"error": "You must provide a valid id"}, status=HTTP_400_BAD_REQUEST)
+            
+        try:
+            video = Video.objects.get(video_id=video_id)
+            
+            print(video.author_id, request.user)
+            if video.author_id != request.user:
+                return Response({"error": "You can only update your own videos"}, status=HTTP_403_FORBIDDEN)
+
+            serializer = VideoSerializer(
+                video,
+                data = request.data,
+                partial = (request.method == "PATCH")
+            )
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+            
+            serializer.save()
+            return Response({"success": serializer.data}, status=HTTP_200_OK)
+        
+        except Video.DoesNotExist:
+            return Response({"error": "Video does not exist"}, status=HTTP_404_NOT_FOUND)
 
 
-@api_view(['PUT', 'PATCH'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def edit_video(request):
-    try:
-        video_id = request.data.get('video_id')
-        existing_video = Video.objects.get(video_id=video_id)
-        
-        if not video_id:
-            return Response({"error": "You must provide a video_id"}, status=HTTP_400_BAD_REQUEST)
-        
-        # combo?
-        serializer = VideoSerializer(
-            existing_video,
-            data = request.data,
-            partial = (request.method == "PATCH")
-        )
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-        
-        serializer.save()
-        
-        return Response({"success": serializer.data}, status=HTTP_200_OK)
-    
-    except Video.DoesNotExist:
-        return Response({"error": "Video does not exist"}, status=HTTP_404_NOT_FOUND)
-    except Exception as e:
-        print(e)
-        return Response({"error": "Can't update video"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+class VideoDeleteView(DestroyAPIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = VideoSerializer
 
-# TODO research instead of deleting entry create a flag like is_deleted
-
-@api_view(['DELETE'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def del_video(request):
-    try:
-        video_id = request.data.get('video_id')
+    def delete(self, request, *args, **kwargs):
+        video_id = kwargs.get('video_id')
         
-        if not video_id:
-            return Response({"error": "You must provide a video_id"}, status=HTTP_400_BAD_REQUEST)
-        existing_video = Video.objects.get(video_id=video_id)
-
-        if existing_video.is_deleted:
-            raise Video.DoesNotExist
-
-        serializer = VideoSerializer(existing_video,
-                                     data={"is_deleted": True},
-                                     partial=True)
+        if video_id is None:
+            return Response({"error": "You must provide a valid id"}, status=HTTP_400_BAD_REQUEST)
         
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-        
-        serializer.save()
+        try:
+            video = Video.objects.get(video_id=video_id)
 
-        return Response({"success": "Video was successfully deleted"}, status=HTTP_204_NO_CONTENT)
-    except Video.DoesNotExist:
-        return Response({"error": "Video does not exist"}, status=HTTP_404_NOT_FOUND)
-    except Exception as e:
-        return Response({"error": "Can't delete video"}, status=HTTP_500_INTERNAL_SERVER_ERROR)
-    
+            if video.author_id != request.user:
+                return Response({"error": "You can only delete your own videos"}, status=HTTP_403_FORBIDDEN)
+
+            if video.is_deleted:
+                raise Video.DoesNotExist
+            
+            video.is_deleted = True
+            video.save(update_fields=['is_deleted'])
+            return Response({"success": "Video was successfully deleted"}, status=HTTP_204_NO_CONTENT)
+
+        except Video.DoesNotExist:
+            return Response({"error": "Video does not exist"}, status=HTTP_404_NOT_FOUND)
+
+
+# needed if user accesses /data/delete/ wihout params
+class VideoOpNoIdView(GenericAPIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = VideoSerializer # still needed to supress warning
+    @extend_schema(
+        operation_id="video_op_no_id",
+        description="video operation without id"
+    )
+    def delete(self, request, *args, **kwargs):
+        return Response({"error": "You must provide a valid id"}, status=HTTP_400_BAD_REQUEST)
