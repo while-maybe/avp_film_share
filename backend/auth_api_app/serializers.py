@@ -21,4 +21,3 @@ class AuthorSerializer(ModelSerializer):
         new_author.save()
         
         new_token = Token.objects.create(user=new_author)
-        
