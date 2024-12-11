@@ -6,7 +6,7 @@ class Video(models.Model):
     video_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=150)
     location = models.URLField(default="", unique=True)
-    author = models.ForeignKey(
+    author_id = models.ForeignKey(
         'Author',
         on_delete=models.CASCADE,
         related_name='user_videos'
