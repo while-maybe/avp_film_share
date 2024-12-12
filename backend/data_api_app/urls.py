@@ -1,5 +1,4 @@
 from django.urls import path
-from django.http import JsonResponse
 from .views import *
 
 app_name = 'data_api_app'
