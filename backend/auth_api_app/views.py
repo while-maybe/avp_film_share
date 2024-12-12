@@ -58,6 +58,7 @@ class AuthorLoginCreateView(CreateAPIView):
         data = request.data
         print(data.keys())
         authenticated_user = authenticate(
+            # .get() is better than request['username'] because I get None instead of error
             username=request.data.get('username'),
             password=request.data.get('password')
         )

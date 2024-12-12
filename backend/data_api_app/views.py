@@ -1,25 +1,36 @@
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response 
 from rest_framework.status import * # Good for HTTP descriptive consts
-# imports for auth
+from rest_framework import filters
 
+# imports for auth, permissions
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
+
 # my stuff
 from .models import Video
 from .serializers import VideoSerializer
 
+# drf API framework custome views
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView, UpdateAPIView, GenericAPIView
+
+# swagger
 from drf_spectacular.utils import extend_schema
+
+import random, string
 
 # Create your views here.
 class VideoListView(ListAPIView):
     queryset = Video.objects.order_by('-date_uploaded').filter(is_deleted=False)
+    search_fields = ['title', 'author_id__username']
+    filter_backends = (filters.SearchFilter,)
     serializer_class = VideoSerializer
-    
+
+
 class VideoRetrieveView(RetrieveAPIView):
     queryset = Video.objects.order_by('-date_uploaded').filter(is_deleted=False)
+    lookup_field = 'video_id'
     serializer_class = VideoSerializer
+
 
 class VideoAddView(CreateAPIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
@@ -27,9 +38,13 @@ class VideoAddView(CreateAPIView):
     serializer_class = VideoSerializer
 
     def post(self, request, *args, **kwargs):
+
+        data = request.data
+        # random slug for the video (just like youtube!)
+        data["slug"] = "".join(random.choices(string.ascii_letters + string.digits, k=10))
         
         serializer = VideoSerializer(data=request.data)
-        
+
         if not serializer.is_valid():
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         

@@ -5,7 +5,7 @@ from .models import Video, Author
 # Register your models here.
 @admin.register(Video)
 class FilmVideo(admin.ModelAdmin):
-    list_display = ['video_id', 'title', 'author_id', 'date_uploaded']
+    list_display = ['video_id', 'title', 'slug', 'author_id', 'date_uploaded']
     list_filter = ['author_id', 'date_uploaded']
     search_fields = ['title', 'author_id', 'date_uploaded', 'comment']
     # raw_id_fields = ['author_id']

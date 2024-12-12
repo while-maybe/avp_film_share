@@ -10,4 +10,4 @@ class VideoSerializer(ModelSerializer):
     class Meta:
         model = Video
         fields = ['video_id', 'title', 'location', 'description', 'slug', 'date_released', 'likes', 'author_username']
-        read_only_fields = ['video_id', 'author_id', 'date_uploaded', 'likes', 'slug']
+        read_only_fields = ['video_id', 'author_id', 'date_uploaded', 'likes']

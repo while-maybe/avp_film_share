@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 class Video(models.Model):
     video_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=150)
+    slug = models.SlugField(max_length=150, unique=True)
     location = models.URLField(default="", unique=True)
     author_id = models.ForeignKey(
         'Author',
@@ -12,7 +13,6 @@ class Video(models.Model):
         related_name='author_videos'
     )
     description = models.TextField(max_length=1000, blank=True)
-    slug = models.SlugField(max_length=150, unique=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
     date_released = models.DateTimeField(auto_now_add=True)
     likes = models.IntegerField(default=0)
