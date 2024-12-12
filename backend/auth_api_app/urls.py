@@ -1,10 +1,11 @@
 from django.urls import path
-from . import views
+from .views import AuthorSignupCreateView, AuthorLogoutCreateView, AuthorLoginCreateView
 
 app_name = 'data_api_app'
 
 urlpatterns = [
-    path('signup/', views.signup),
-    path('login/', views.login),
-    path('logout/', views.logout),
+    # class update
+    path('signup/', AuthorSignupCreateView.as_view(), name='author_signup'),
+    path('logout/', AuthorLogoutCreateView.as_view(), name='author_logout'),
+    path('login/', AuthorLoginCreateView.as_view(), name='author_login'),
 ]
