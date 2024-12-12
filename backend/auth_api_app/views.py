@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+# from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from rest_framework.response import Response
 from rest_framework.status import *
@@ -16,14 +16,11 @@ from data_api_app.models import Author
 from .serializers import AuthorSerializer
 
 
-# TODO wrap the functions is similar classes as the data_api view
-# TODO investigate if needed to upgrade to class based views
 # TODO api key auth
 # TODO investigate OTP validation
 
 
 # Create your views here.
-
 class AuthorSignupCreateView(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = AuthorSerializer
@@ -47,48 +44,36 @@ class AuthorSignupCreateView(CreateAPIView):
 class AuthorLogoutCreateView(CreateAPIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    # serializer_class = AuthorSerializer
     def create(self, request):
         logout(request._request)
         request.user.auth_token.delete()
-    
         return Response({"message": "logged out"}, status=HTTP_200_OK)
 
 
-@api_view(["POST"])
-def login(request):
-    
-    data = request.data
-    authenticated_user = authenticate(username=data["username"], password=data['password'])
-    
-    if authenticated_user is None:
-        return Response({"error": "Invalid username/password"}, status=HTTP_400_BAD_REQUEST)
-    
-    # if the user is authenticated do the below
-    author = Author.objects.get(username=data['username'])
-    serializer = AuthorSerializer(author)
-    
-    existing_token, new_token = Token.objects.get_or_create(user=author)
+class AuthorLoginCreateView(CreateAPIView):
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    permission_classes = [AllowAny]
+    def create(self, request):
 
-    data = {
-        "author": serializer.data,
-        # we can do logical operator short-circuiting in Python as well...
-        "token": existing_token.key or new_token.key
-    }
-    return Response(data, status=HTTP_200_OK)
-    
+        data = request.data
+        print(data.keys())
+        authenticated_user = authenticate(
+            username=request.data.get('username'),
+            password=request.data.get('password')
+        )
+        
+        if authenticated_user is None:
+            return Response({"error": "Invalid username/password"}, status=HTTP_401_UNAUTHORIZED)
 
+        # if the user is authenticated do the below
+        author = Author.objects.get(username=data['username'])
+        serializer = AuthorSerializer(author)
 
-
-# @api_view(["POST"])
-# @authentication_classes([SessionAuthentication, TokenAuthentication])
-# @permission_classes([IsAuthenticated])
-# def logout(request):
-    
-#     # _request needed as DRF wraps the request and we need the original request - can't do logout without it
-    
-#     # TODO research logout from client side
-#     logout(request._request)
-#     request.user.auth_token.delete()
-    
-#     return Response({"message": "logged out"}, status=HTTP_200_OK)
+        existing_token, new_token = Token.objects.get_or_create(user=author)
+        
+        data = {
+            "author": serializer.data,
+            # we can do logical operator short-circuiting in Python as well...
+            "token": existing_token.key or new_token.key
+        }
+        return Response(data, status=HTTP_200_OK)
