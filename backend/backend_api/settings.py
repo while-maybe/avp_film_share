@@ -75,6 +75,7 @@ MIDDLEWARE = [
 #     "http://localhost:5173",  # Your React app's URL
 # ]
 
+# this is just temporary
 CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'backend_api.urls'
