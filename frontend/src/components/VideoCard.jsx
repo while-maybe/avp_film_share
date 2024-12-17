@@ -42,9 +42,9 @@ const VideoCard = ({
   };
 
   return (
-    <Card className="mt-6 w-96">
+    <Card className="mt-6 w-96 bg-blue-gray-100">
       <Dialog open={open} handler={handleOpen}>
-        <DialogHeader>Delete this Post?</DialogHeader>
+        <DialogHeader>Delete this Video?</DialogHeader>
         <DialogBody>
           This action will permanently delete this video. Are you sure you want
           to continue?
@@ -68,6 +68,7 @@ const VideoCard = ({
           <Typography variant="h5" color="blue-gray" className="mb-2">
             {title}
           </Typography>
+
           <IconButton
             variant="text"
             color="blue-gray"
@@ -84,6 +85,7 @@ const VideoCard = ({
             </svg>
           </IconButton>
         </div>
+
         <Typography className="min-h-12">
           {truncateText(description, 80)}
         </Typography>

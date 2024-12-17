@@ -10,7 +10,9 @@ function VideoList() {
     const response = await api.get("/data/list/");
     // console.log(response.data.results);
 
-    setVideos(response.data.results);
+    if (response.status === 200) {
+      setVideos(response.data.results);
+    }
   }
 
   useEffect(function () {
