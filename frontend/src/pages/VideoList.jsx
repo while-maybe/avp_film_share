@@ -1,12 +1,12 @@
 import Layout from "../components/Layout";
 import VideoList from "../components/VideoList";
 
-const VideoListPage = () => {
+function VideoListPage() {
   return (
     <Layout>
       <VideoList />
     </Layout>
   );
-};
+}
 
 export default VideoListPage;
