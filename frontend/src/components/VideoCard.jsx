@@ -12,6 +12,8 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 
+import ReactPlayer from "react-player/lazy";
+
 import { truncateText } from "../util/text";
 import { formatDistanceToNow } from "date-fns";
 
@@ -42,7 +44,7 @@ const VideoCard = ({
   };
 
   return (
-    <Card className="mt-6 w-full bg-blue-gray-100 flex">
+    <Card className="mt-6 w-7/12 bg-blue-gray-100 flex">
       <Dialog open={open} handler={handleOpen}>
         <DialogHeader>Delete this Video?</DialogHeader>
 
@@ -67,8 +69,17 @@ const VideoCard = ({
       </Dialog>
 
       <CardBody className="flex">
-        <div className="flex items-center p-4">
-          <p>this is just for the video thumbnail</p>
+        <div className="flex items-center p-2">
+          {/* <p>this is just for the video thumbnail</p> */}
+          <div className="aspect-[16/9] mr-4 w-64">
+            <ReactPlayer
+              className="h-full v-full"
+              width="100%"
+              height="100%"
+              light={true}
+              url="https://www.youtube.com/watch?v=ysz5S6PUM-U"
+            />
+          </div>
         </div>
 
         <div className="w-full">
