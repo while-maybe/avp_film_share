@@ -110,6 +110,14 @@ export default function Navigation() {
                     variant="text"
                     size="sm"
                     className="hidden lg:inline-block"
+                    onClick={() => navigate("/new")}>
+                    <span>Add a video</span>
+                  </Button>
+
+                  <Button
+                    variant="text"
+                    size="sm"
+                    className="hidden lg:inline-block"
                     onClick={handleLogout}>
                     <span>Log Out</span>
                   </Button>

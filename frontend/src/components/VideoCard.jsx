@@ -46,7 +46,7 @@ const VideoCard = ({
   };
 
   return (
-    <Card className="mt-6 bg-blue-gray-100 flex">
+    <Card className="mt-6 bg-blue-gray-100 w-5/12">
       <Dialog open={open} handler={handleOpen}>
         <DialogHeader>Delete this Video?</DialogHeader>
 
@@ -73,7 +73,7 @@ const VideoCard = ({
       <CardBody className="flex">
         <div className="flex items-center p-2">
           {/* <p>this is just for the video thumbnail</p> */}
-          <div className="aspect-[16/9] mr-4 w-64">
+          <div className="aspect-[16/9] mr-3 w-64">
             <ReactPlayer
               className="h-full v-full"
               width="100%"

@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import VideoList from "./pages/VideoList";
 import Authorboard from "./pages/Authorboard";
 import SignUp from "./pages/SignUp";
+import NewVideo from "./pages/NewVideo";
 
 function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ function AppRoutes() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/authorboard/:author" element={<Authorboard />} />
         <Route path="/videos" element={<VideoList />} />
+        <Route path="/new" element={<NewVideo />} />
       </Routes>
     </Router>
   );

@@ -12,7 +12,7 @@ function Layout({ children }) {
 
   useEffect(
     function () {
-      const protectedRoutes = ["/add", "/delete"];
+      const protectedRoutes = ["/new", "/delete"];
       if (!user.isLoggedIn && protectedRoutes.includes(location.pathname)) {
         navigate("/login");
       }
