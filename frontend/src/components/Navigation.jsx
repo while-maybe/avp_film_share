@@ -10,15 +10,17 @@ import {
 } from "@material-tailwind/react";
 
 import { useNavigate, Link } from "react-router-dom";
-
 import { useUser } from "../contexts/UserContext";
+import { useState } from "react";
 
+import api from "../api/axios";
 import logo from "../assets/react.svg";
 
 export default function Navigation() {
   const [openNav, setOpenNav] = React.useState(false);
-
   const navigate = useNavigate();
+
+  const [error, setError] = useState("");
 
   const { user, logoutUser } = useUser();
 
@@ -42,6 +44,29 @@ export default function Navigation() {
       )}
     </ul>
   );
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.post("/auth/logout/");
+
+      if (response.status === 200) {
+        // delete the local token
+        localStorage.removeItem("authToken");
+
+        // Logout the user
+        logoutUser();
+
+        console.log("Goodbye", response.author, "Logout clicked");
+
+        navigate("/dashboard");
+      } else {
+        setError("Not logged in");
+      }
+    } catch (err) {
+      setError("Not logged in ");
+    }
+  };
 
   return (
     <div className="-m-2 max-h-[768px] w-[calc(100%+48px)] overflow-scroll">
@@ -85,7 +110,7 @@ export default function Navigation() {
                     variant="text"
                     size="sm"
                     className="hidden lg:inline-block"
-                    onClick={logoutUser}>
+                    onClick={handleLogout}>
                     <span>Log Out</span>
                   </Button>
 

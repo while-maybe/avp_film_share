@@ -12,6 +12,8 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 
+import { Link } from "react-router-dom";
+
 import ReactPlayer from "react-player/lazy";
 
 import { truncateText } from "../util/text";
@@ -44,7 +46,7 @@ const VideoCard = ({
   };
 
   return (
-    <Card className="mt-6 w-7/12 bg-blue-gray-100 flex">
+    <Card className="mt-6 bg-blue-gray-100 flex">
       <Dialog open={open} handler={handleOpen}>
         <DialogHeader>Delete this Video?</DialogHeader>
 
@@ -84,7 +86,7 @@ const VideoCard = ({
 
         <div className="w-full">
           <div className="flex justify-between items-center">
-            <Typography variant="h5" color="blue-gray" className="mb-2">
+            <Typography variant="h5" color="blue-gray" className="mb-0">
               {title}
             </Typography>
 
@@ -105,7 +107,16 @@ const VideoCard = ({
             </IconButton>
           </div>
 
-          <Typography className="min-h-12">
+          <Typography
+            variant="h6"
+            color="blue"
+            className="mb-2"
+            as={Link}
+            to={`/authorboard/${author}`}>
+            {author}
+          </Typography>
+
+          <Typography className="min-h-6">
             {truncateText(description, 80)}
           </Typography>
           <Typography color="blue-gray" variant="small">

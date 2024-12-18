@@ -1,4 +1,5 @@
 import { useState } from "react";
+import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -11,39 +12,48 @@ import {
   Button,
 } from "@material-tailwind/react";
 
-import api from "../api/axios";
 import { useUser } from "../contexts/UserContext";
 
-const LoginPage = () => {
-  const { loginUser } = useUser();
-
-  const [userName, setUserName] = useState("");
+const SignUpPage = () => {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const { loginUser } = useUser();
 
-  const onClickLogin = async (e) => {
+  const onClickSignUp = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post("/auth/login/", {
+      const signUpRes = await api.post("/auth/signup/", {
         username: userName,
+        email: email,
         password: password,
+        password2: password,
       });
 
-      if (response.status === 200) {
-        // Login the User to their Session using Context API
-        loginUser(userName, password);
+      if (signUpRes.status === 201) {
+        const loginRes = await api.post("/auth/login/", {
+          username: userName,
+          password: password,
+        });
 
-        // Save the JWT Token to Local Storage
-        localStorage.setItem("authToken", response.data.token);
+        if (loginRes.status === 200) {
+          // Login the User to their Session using Context API
+          loginUser(userName, password);
 
-        navigate("/dashboard");
+          // Save the JWT Token to Local Storage
+          localStorage.setItem("authToken", loginRes.data.token);
+
+          console.log("User signed up and logged in:", userName);
+          navigate("/dashboard");
+        }
       } else {
-        setError("Invalid credentials. Please try again.");
+        setError("Could not sign up. Please try again.");
       }
     } catch (err) {
-      setError("Invalid credentials. Please try again.");
+      setError("Invalid account details. Please try again.");
     }
   };
 
@@ -55,15 +65,21 @@ const LoginPage = () => {
           color="gray"
           className="mb-4 grid h-28 place-items-center">
           <Typography variant="h3" color="white">
-            Log In
+            Sign Up
           </Typography>
         </CardHeader>
         <CardBody className="flex flex-col gap-4">
           <Input
-            label="User Name"
+            label="Username"
             size="lg"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
+          />
+          <Input
+            label="Email"
+            size="lg"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <Input
             label="Password"
@@ -77,18 +93,18 @@ const LoginPage = () => {
           </div>
         </CardBody>
         <CardFooter className="pt-0">
-          <Button variant="gradient" fullWidth onClick={onClickLogin}>
-            Log In
+          <Button variant="gradient" onClick={onClickSignUp} fullWidth>
+            Sign Up
           </Button>
           <Typography variant="small" className="mt-6 flex justify-center">
-            Don&apos;t have an account?
+            Already have an account?
             <Typography
               as="a"
-              href="/signup"
+              href="/login"
               variant="small"
               color="blue-gray"
               className="ml-1 font-bold">
-              Sign Up
+              Sign in
             </Typography>
           </Typography>
         </CardFooter>
@@ -97,4 +113,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignUpPage;
