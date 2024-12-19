@@ -40,12 +40,17 @@ class Author(AbstractUser):
     )
     author_id = models.AutoField(primary_key=True)
     about = models.TextField(max_length=1500, blank=True)
+    short_about = models.CharField(max_length=50)
     num_uploads = models.IntegerField(default=0)
     email = models.EmailField(unique=True)
     
     title = models.TextField(max_length=30, default="")
     firstname = models.TextField(max_length=50)
     lastname = models.TextField(max_length=50)
+    
+    @property
+    def full_name(self):
+        return f"{self.title} {self.firstname} {self.lastname}"
     
     def __str__(self):
         return self.username

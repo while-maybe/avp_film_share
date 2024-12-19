@@ -3,13 +3,14 @@
 from rest_framework.response import Response
 from rest_framework.status import *
 
+
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, logout
 
 # imports for auth
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 
 # import Author from data_api & AuthorSerializer
 from data_api_app.models import Author
@@ -21,6 +22,13 @@ from .serializers import AuthorSerializer
 
 
 # Create your views here.
+class AuthorRetrieveView(RetrieveAPIView):
+    permission_classes = [AllowAny]
+    queryset = Author.objects.filter(is_active=True)
+    lookup_field = 'username'
+    serializer_class = AuthorSerializer
+
+
 class AuthorSignupCreateView(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = AuthorSerializer
