@@ -46,7 +46,7 @@ const VideoCard = ({
   };
 
   return (
-    <Card className="mt-6 bg-blue-gray-100 w-5/12">
+    <Card className="bg-blue-gray-100 w-5/12 max-h-min">
       <Dialog open={open} handler={handleOpen}>
         <DialogHeader>Delete this Video?</DialogHeader>
 

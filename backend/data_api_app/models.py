@@ -39,9 +39,13 @@ class Author(AbstractUser):
         default=Status.ACTIVE
     )
     author_id = models.AutoField(primary_key=True)
-    about = models.TextField(max_length=1000, blank=True)
+    about = models.TextField(max_length=1500, blank=True)
     num_uploads = models.IntegerField(default=0)
     email = models.EmailField(unique=True)
+    
+    title = models.TextField(max_length=30, default="")
+    firstname = models.TextField(max_length=50)
+    lastname = models.TextField(max_length=50)
     
     def __str__(self):
         return self.username
@@ -49,4 +53,3 @@ class Author(AbstractUser):
     def inc_uploads(self):
         self.num_uploads += 1
         self.save()
-        

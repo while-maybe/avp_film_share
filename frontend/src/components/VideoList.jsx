@@ -20,7 +20,7 @@ function VideoList() {
   }, []);
 
   return (
-    <section className="container max-w-full mx-auto px-8 py-10 flex justify-center flex-wrap gap-4">
+    <section className="container max-w-full mx-auto px-8 py-10 flex justify-center flex-wrap gap-8 content-start">
       {videos.map((video) => (
         <VideoCard
           key={video.video_id}

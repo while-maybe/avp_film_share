@@ -88,17 +88,18 @@ export default function Navigation() {
               <Input
                 type="search"
                 color="black"
-                label="Type here..."
+                label="enter the name of the expert you'd like to follow..."
                 className="pr-30"
                 containerProps={{
-                  className: "min-w-[288px]",
+                  // className: "min-w-[288px]",
+                  className: "min-w-[520px]",
                 }}
               />
               <Button
                 size="sm"
                 color="white"
                 className="!absolute right-1 top-1 rounded">
-                Search
+                Discover Now
               </Button>
             </div>
           </div>

@@ -28,7 +28,7 @@ function ListOfAuthors() {
 
   return (
     <>
-      <section className="pr-8 py-14">
+      <section className="pr-12 py-8">
         <Typography variant="h4" className="">
           Contributors
         </Typography>
@@ -47,12 +47,12 @@ function ListOfAuthors() {
             />
             <div className="flex flex-col justify-center">
               <Typography
-                className="font-bold text-blue-900"
+                className="text-sm font-bold text-blue-900"
                 as={Link}
                 to={`/authorboard/username55`}>
                 {each.name}
               </Typography>
-              <Typography className="">{each.specialty}</Typography>
+              <Typography className="text-sm">{each.specialty}</Typography>
             </div>
           </div>
         ))}
