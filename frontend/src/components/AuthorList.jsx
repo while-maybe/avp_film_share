@@ -18,14 +18,18 @@ function AuthorList() {
   const [videos, setVideos] = useState([]);
   const { author } = useParams();
 
-  async function getVideosByAuthor() {
-    const response = await api.get(`/data/list/?search=${author}`);
-    // console.log(response.data.results);
+  useEffect(function () {
+    async function getVideosByAuthor() {
+      const response = await api.get(`/data/list/?search=${author}`);
+      // console.log(response.data.results);
 
-    if (response.status === 200) {
-      setVideos(response.data.results);
+      if (response.status === 200) {
+        setVideos(response.data.results);
+      }
     }
-  }
+
+    getVideosByAuthor();
+  }, []);
 
   function ProfileCard({ name }) {
     return (
@@ -75,15 +79,21 @@ function AuthorList() {
               <i className="fab fa-instagram" />
             </Typography>
           </Tooltip>
+
+          <Tooltip content="Share">
+            <Typography
+              as="a"
+              href="#share"
+              variant="lead"
+              color="red"
+              textGradient>
+              <i className="fas fa-share" />
+            </Typography>
+          </Tooltip>
         </CardFooter>
       </Card>
     );
   }
-
-  // no dependency array as it needs to re-render everytime
-  useEffect(function () {
-    getVideosByAuthor();
-  });
 
   return (
     <>

@@ -79,7 +79,7 @@ const VideoCard = ({
               width="100%"
               height="100%"
               light={true}
-              url="https://www.youtube.com/watch?v=ysz5S6PUM-U"
+              url="https://www.youtube.com/watch?v=libKVRa01L8"
             />
           </div>
         </div>
