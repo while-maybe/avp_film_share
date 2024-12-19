@@ -14,7 +14,7 @@ import { useUser } from "../contexts/UserContext";
 import { useState } from "react";
 
 import api from "../api/axios";
-import logo from "/assets/logo-small.png";
+import logo from "/assets/edureel.png";
 
 export default function Navigation() {
   const [openNav, setOpenNav] = React.useState(false);
@@ -80,7 +80,7 @@ export default function Navigation() {
               as="a"
               href="/"
               className="mr-4 cursor-pointer py-1.5 font-medium">
-              EduReel video sharing
+              {/* EduReel video sharing */}
             </Typography>
           </div>
           <div className="flex items-center gap-4">
@@ -198,6 +198,15 @@ export default function Navigation() {
           </div>
         </MobileNav>
       </Navbar>
+      <div className="flex flex-col justify-center items-center bg-blue-gray-900 h-12 p-16">
+        <Typography className="text-4xl text-blue-gray-100 font-bold mb-2 uppercase">
+          EduReel video sharing
+        </Typography>
+
+        <Typography className="text-2xl text-blue-gray-100 font-bold">
+          Curate your content, one video at a time
+        </Typography>
+      </div>
     </div>
   );
 }

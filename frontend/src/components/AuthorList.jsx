@@ -31,80 +31,68 @@ function AuthorList() {
     getVideosByAuthor();
   }, []);
 
-  function ProfileCard({ name }) {
+  function ProfileCard({ name, shortBio, Bio }) {
     return (
-      <Card className="w-96">
-        <CardHeader floated={false} className="h-80">
-          <img
-            src="https://docs.material-tailwind.com/img/team-3.jpg"
-            alt="profile-picture"
-          />
-        </CardHeader>
-        <CardBody className="text-center">
-          <Typography variant="h4" color="blue-gray" className="mb-2">
-            {name}
-          </Typography>
-          <Typography color="blue-gray" className="font-medium" textGradient>
-            CEO / Co-Founder
-          </Typography>
-        </CardBody>
-        <CardFooter className="flex justify-center gap-7 pt-2">
-          <Tooltip content="Like">
-            <Typography
-              as="a"
-              href="#facebook"
-              variant="lead"
-              color="blue"
-              textGradient>
-              <i className="fab fa-facebook" />
+      <>
+        <Card className="w-96">
+          <CardHeader floated={false} className="h-80">
+            <img
+              src="https://docs.material-tailwind.com/img/team-3.jpg"
+              alt="profile-picture"
+            />
+          </CardHeader>
+          <CardBody className="text-center">
+            <Typography variant="h4" color="blue-gray" className="mb-2">
+              {name}
             </Typography>
-          </Tooltip>
-          <Tooltip content="Follow">
-            <Typography
-              as="a"
-              href="#twitter"
-              variant="lead"
-              color="light-blue"
-              textGradient>
-              <i className="fab fa-twitter" />
+            <Typography color="blue-gray" className="font-medium" textGradient>
+              CEO / Co-Founder
             </Typography>
-          </Tooltip>
-          <Tooltip content="Follow">
-            <Typography
-              as="a"
-              href="#instagram"
-              variant="lead"
-              color="purple"
-              textGradient>
-              <i className="fab fa-instagram" />
-            </Typography>
-          </Tooltip>
+          </CardBody>
+          <CardFooter className="flex justify-center gap-7 pt-2">
+            <Tooltip content="Like">
+              <Typography
+                as="a"
+                href="#facebook"
+                variant="lead"
+                color="blue"
+                textGradient>
+                <i className="fab fa-facebook" />
+              </Typography>
+            </Tooltip>
+            <Tooltip content="Follow">
+              <Typography
+                as="a"
+                href="#twitter"
+                variant="lead"
+                color="light-blue"
+                textGradient>
+                <i className="fab fa-twitter" />
+              </Typography>
+            </Tooltip>
+            <Tooltip content="Follow">
+              <Typography
+                as="a"
+                href="#instagram"
+                variant="lead"
+                color="purple"
+                textGradient>
+                <i className="fab fa-instagram" />
+              </Typography>
+            </Tooltip>
 
-          <Tooltip content="Share">
-            <Typography
-              as="a"
-              href="#share"
-              variant="lead"
-              color="red"
-              textGradient>
-              <i className="fas fa-share" />
-            </Typography>
-          </Tooltip>
-        </CardFooter>
-      </Card>
-    );
-  }
-
-  return (
-    <>
-      <div className="flex mt-10 gap-3 justify-center">
-        {/* <Avatar
-          src="https://docs.material-tailwind.com/img/face-2.jpg"
-          alt="avatar"
-          size="xxl"
-        /> */}
-
-        <ProfileCard name={author} />
+            <Tooltip content="Share">
+              <Typography
+                as="a"
+                href="#share"
+                variant="lead"
+                color="red"
+                textGradient>
+                <i className="fas fa-share" />
+              </Typography>
+            </Tooltip>
+          </CardFooter>
+        </Card>
 
         <Typography className="w-1/3">
           Dr. Alex Carter is a distinguished professor of Environmental Sciences
@@ -125,6 +113,14 @@ function AuthorList() {
           landscapes, blending personal interests with their professional
           dedication to the natural world.
         </Typography>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className="flex mt-10 gap-3 justify-center">
+        <ProfileCard name={author} />
       </div>
 
       <Typography className="text-center mt-8">Showing 58 results</Typography>
