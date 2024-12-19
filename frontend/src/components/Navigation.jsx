@@ -14,7 +14,7 @@ import { useUser } from "../contexts/UserContext";
 import { useState } from "react";
 
 import api from "../api/axios";
-import logo from "../assets/react.svg";
+import logo from "/assets/logo-small.png";
 
 export default function Navigation() {
   const [openNav, setOpenNav] = React.useState(false);
@@ -39,7 +39,7 @@ export default function Navigation() {
           size="sm"
           className="hidden lg:inline-block"
           onClick={() => navigate("/create")}>
-          <span>New Post</span>
+          <span>New Video</span>
         </Button>
       )}
     </ul>
@@ -69,18 +69,18 @@ export default function Navigation() {
   };
 
   return (
-    <div className="-m-2 max-h-[768px] w-[calc(100%+48px)] overflow-scroll">
+    <div className="">
       <Navbar className="sticky top-0 z-10 h-max max-w-full rounded-none py-2 lg:px-8 lg:py-4">
-        <div className="flex items-center justify-around text-blue-gray-900">
+        <div className="flex items-center justify-between text-blue-gray-900">
           <div className="flex items-center gap-4">
             <Link to="/">
-              <img src={logo} alt="logo" className="h-8" />
+              <img src={logo} alt="logo" className="h-16" />
             </Link>
             <Typography
               as="a"
               href="/"
               className="mr-4 cursor-pointer py-1.5 font-medium">
-              React Tech Blog
+              EduReel video sharing
             </Typography>
           </div>
           <div className="flex items-center gap-4">
