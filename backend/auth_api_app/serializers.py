@@ -15,7 +15,7 @@ class AuthorSerializer(ModelSerializer):
 
     class Meta:
         model = Author
-        fields = ['username', 'email', 'password', 'about', 'short_about', 'name', 'title', 'firstname', 'lastname']
+        fields = ['author_id', 'username', 'email', 'password', 'about', 'short_about', 'name', 'title', 'firstname', 'lastname']
         # extra_kwargs customizes behavior of model fields
         # we don't send plain text password back int the response!
         extra_kwargs = {
@@ -45,5 +45,5 @@ class AuthorSerializer(ModelSerializer):
         if isinstance(obj, dict):
             return f"{obj['title']} {obj['firstname']} {obj['lastname']}"
         # or obj data if getting data from db
-        return f"{obj.title} {obj.firstname} {obj.lastname}"
+        return f"{obj.title.title()} {obj.firstname.title()} {obj.lastname.title()}".strip()
     
