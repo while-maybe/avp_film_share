@@ -4,8 +4,8 @@ function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="flex w-full flex-row items-center justify-center border-t border-blue-gray-50 py-2 text-center">
-      <Typography color="blue-gray" className="font-normal">
+    <footer className="flex w-full flex-row items-center justify-center border-t border-blue-gray-50 py-4 text-center bg-blue-gray-900 bottom-0 sticky">
+      <Typography color="blue-gray" className="font-normal text-blue-gray-100">
         &copy; {currentYear} EduReel
       </Typography>
     </footer>

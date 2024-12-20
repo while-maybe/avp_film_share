@@ -16,106 +16,112 @@ import {
 // get the videos from the list endpoint
 function AuthorList() {
   const [videos, setVideos] = useState([]);
+  const [authorDetails, setAuthorDetails] = useState({});
   const { author } = useParams();
 
-  async function getVideosByAuthor() {
-    const response = await api.get(`/data/list/?search=${author}`);
-    // console.log(response.data.results);
+  useEffect(function () {
+    async function getVideosByAuthor() {
+      const response = await api.get(`/data/list/?search=${author}`);
+      // console.log(response.data.results);
 
-    if (response.status === 200) {
-      setVideos(response.data.results);
+      if (response.status === 200) {
+        setVideos(response.data.results);
+      }
     }
-  }
 
-  function ProfileCard({ name }) {
+    getVideosByAuthor();
+  }, []);
+
+  useEffect(function () {
+    async function getAuthorDetails() {
+      const response = await api.get(`/auth/authors/${author}`);
+      // console.log(response.data.results);
+
+      if (response.status === 200) {
+        setAuthorDetails(response.data);
+      }
+    }
+
+    getAuthorDetails();
+  }, []);
+
+  function ProfileCard({ name, shortBio, bio }) {
     return (
-      <Card className="w-96">
-        <CardHeader floated={false} className="h-80">
-          <img
-            src="https://docs.material-tailwind.com/img/team-3.jpg"
-            alt="profile-picture"
-          />
-        </CardHeader>
-        <CardBody className="text-center">
-          <Typography variant="h4" color="blue-gray" className="mb-2">
-            {name}
-          </Typography>
-          <Typography color="blue-gray" className="font-medium" textGradient>
-            CEO / Co-Founder
-          </Typography>
-        </CardBody>
-        <CardFooter className="flex justify-center gap-7 pt-2">
-          <Tooltip content="Like">
-            <Typography
-              as="a"
-              href="#facebook"
-              variant="lead"
-              color="blue"
-              textGradient>
-              <i className="fab fa-facebook" />
+      <>
+        <Card className="w-96">
+          <CardHeader floated={false} className="h-80">
+            <img
+              src="https://docs.material-tailwind.com/img/team-3.jpg"
+              alt="profile-picture"
+            />
+          </CardHeader>
+          <CardBody className="text-center">
+            <Typography variant="h4" color="blue-gray" className="mb-2">
+              {name}
             </Typography>
-          </Tooltip>
-          <Tooltip content="Follow">
-            <Typography
-              as="a"
-              href="#twitter"
-              variant="lead"
-              color="light-blue"
-              textGradient>
-              <i className="fab fa-twitter" />
+            <Typography color="blue-gray" className="font-medium" textGradient>
+              {shortBio}
             </Typography>
-          </Tooltip>
-          <Tooltip content="Follow">
-            <Typography
-              as="a"
-              href="#instagram"
-              variant="lead"
-              color="purple"
-              textGradient>
-              <i className="fab fa-instagram" />
-            </Typography>
-          </Tooltip>
-        </CardFooter>
-      </Card>
+          </CardBody>
+          <CardFooter className="flex justify-center gap-7 pt-2">
+            <Tooltip content="Like">
+              <Typography
+                as="a"
+                href="#facebook"
+                variant="lead"
+                color="blue"
+                textGradient>
+                <i className="fab fa-facebook" />
+              </Typography>
+            </Tooltip>
+            <Tooltip content="Follow">
+              <Typography
+                as="a"
+                href="#twitter"
+                variant="lead"
+                color="light-blue"
+                textGradient>
+                <i className="fab fa-twitter" />
+              </Typography>
+            </Tooltip>
+            <Tooltip content="Follow">
+              <Typography
+                as="a"
+                href="#instagram"
+                variant="lead"
+                color="purple"
+                textGradient>
+                <i className="fab fa-instagram" />
+              </Typography>
+            </Tooltip>
+
+            <Tooltip content="Share">
+              <Typography
+                as="a"
+                href="#share"
+                variant="lead"
+                color="red"
+                textGradient>
+                <i className="fas fa-share" />
+              </Typography>
+            </Tooltip>
+          </CardFooter>
+        </Card>
+
+        <Typography className="text-xl italic w-1/3">{bio}</Typography>
+      </>
     );
   }
 
-  // no dependency array as it needs to re-render everytime
-  useEffect(function () {
-    getVideosByAuthor();
-  });
-
   return (
     <>
-      <div className="flex mt-10 gap-3 justify-center">
-        {/* <Avatar
-          src="https://docs.material-tailwind.com/img/face-2.jpg"
-          alt="avatar"
-          size="xxl"
-        /> */}
-
-        <ProfileCard name={author} />
-
-        <Typography className="w-1/3">
-          Dr. Alex Carter is a distinguished professor of Environmental Sciences
-          at the University of Crestwood, where they have been a faculty member
-          since 2012. Specializing in climate adaptation strategies and
-          sustainable resource management, Dr. Carter's research bridges the gap
-          between theoretical models and practical solutions for mitigating the
-          impacts of climate change. With over 50 peer-reviewed publications and
-          multiple speaking engagements at international conferences, they have
-          established themselves as a thought leader in the field. Dr. Carter's
-          groundbreaking work on urban heat island effects has been recognized
-          with awards from the Global Sustainability Institute and the National
-          Science Foundation. Outside the lab, they are passionate about
-          mentoring the next generation of scientists, serving as an advisor for
-          graduate research programs and a director for community-based
-          environmental initiatives. When not immersed in academia, Dr. Carter
-          enjoys hiking, photography, and exploring biodiversity in remote
-          landscapes, blending personal interests with their professional
-          dedication to the natural world.
-        </Typography>
-      </div>
+      <section className="flex mt-10 gap-3 justify-center">
+        <ProfileCard
+          name={authorDetails.name}
+          bio={authorDetails.about}
+          shortBio={authorDetails.short_about}
+        />
+      </section>
 
       <Typography className="text-center mt-8">Showing 58 results</Typography>
 

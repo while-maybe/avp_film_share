@@ -11,10 +11,11 @@ class AuthorSerializer(ModelSerializer):
     firstname = serializers.CharField(write_only=True)
     lastname = serializers.CharField(write_only=True)
     # could we do password here as well? - not a CharField though...
+    
 
     class Meta:
         model = Author
-        fields = ['username', 'email', 'password', 'about', 'name', 'title', 'firstname', 'lastname']
+        fields = ['author_id', 'username', 'email', 'password', 'about', 'short_about', 'name', 'title', 'firstname', 'lastname']
         # extra_kwargs customizes behavior of model fields
         # we don't send plain text password back int the response!
         extra_kwargs = {
@@ -29,6 +30,8 @@ class AuthorSerializer(ModelSerializer):
             password = self.validated_data["password"],
             
             about = self.validated_data["about"],
+            short_about = self.validated_data["short_about"],
+            
             title = self.validated_data["title"],
             firstname = self.validated_data["firstname"],
             lastname = self.validated_data["lastname"],
@@ -42,4 +45,5 @@ class AuthorSerializer(ModelSerializer):
         if isinstance(obj, dict):
             return f"{obj['title']} {obj['firstname']} {obj['lastname']}"
         # or obj data if getting data from db
-        return f"{obj.title} {obj.firstname} {obj.lastname}"
+        return f"{obj.title.title()} {obj.firstname.title()} {obj.lastname.title()}".strip()
+    
