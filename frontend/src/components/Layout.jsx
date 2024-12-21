@@ -21,7 +21,7 @@ function Layout({ children }) {
   );
 
   return (
-    <div>
+    <div className="flex flex-col justify-between h-screen">
       <Navigation />
       {children}
       <Footer />
