@@ -24,6 +24,7 @@ const VideoCard = ({
   title,
   url,
   author,
+  authorFullName,
   description,
   date_uploaded,
   date_released,
@@ -72,14 +73,12 @@ const VideoCard = ({
 
       <CardBody className="flex">
         <div className="flex items-center p-2">
-          {/* <p>this is just for the video thumbnail</p> */}
           <div className="aspect-[16/9] mr-3 w-64">
             <ReactPlayer
               className="h-full v-full"
               width="100%"
               height="100%"
               light={true}
-              url="https://www.youtube.com/watch?v=libKVRa01L8"
               url={url}
             />
           </div>
@@ -88,7 +87,7 @@ const VideoCard = ({
         <div className="w-full">
           <div className="flex justify-between items-center">
             <Typography variant="h5" color="blue-gray" className="mb-0">
-              {title}
+              {truncateText(title, 54)}
             </Typography>
 
             <IconButton
@@ -114,7 +113,7 @@ const VideoCard = ({
             className="mb-2"
             as={Link}
             to={`/authorboard/${author}`}>
-            {author}
+            {authorFullName}
           </Typography>
 
           <Typography className="min-h-6">

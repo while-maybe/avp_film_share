@@ -28,6 +28,7 @@ function VideoList() {
           title={video.title}
           url={video.location}
           author={video.author_username}
+          authorFullName={video.author_full_name}
           description={video.description}
           date_uploaded={video.date_uploaded}
           date_released={video.date_released}
